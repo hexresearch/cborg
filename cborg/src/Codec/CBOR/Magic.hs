@@ -108,7 +108,7 @@ import           Foreign.C (CUShort)
 import qualified Numeric.Half as Half
 
 #if !defined(HAVE_BYTESWAP_PRIMOPS) || !defined(MEM_UNALIGNED_OPS) || !defined(OPTIMIZE_GMP)
-import           Data.Bits ((.|.), unsafeShiftL)
+import           Data.Bits ((.|.), shiftL)
 #endif
 
 #if defined(ARCH_32bit)
@@ -177,7 +177,7 @@ grabWord16 (Ptr ip#) =
     case indexWord8OffAddr# ip# 0# of
      w0# ->
       case indexWord8OffAddr# ip# 1# of
-       w1# -> W16# w0# `unsafeShiftL` 8 .|.
+       w1# -> W16# w0# `shiftL` 8 .|.
               W16# w1#
 
 grabWord32 (Ptr ip#) =
@@ -188,9 +188,9 @@ grabWord32 (Ptr ip#) =
         case indexWord8OffAddr# ip# 2# of
          w2# ->
           case indexWord8OffAddr# ip# 3# of
-           w3# -> W32# w0# `unsafeShiftL` 24 .|.
-                  W32# w1# `unsafeShiftL` 16 .|.
-                  W32# w2# `unsafeShiftL`  8 .|.
+           w3# -> W32# w0# `shiftL` 24 .|.
+                  W32# w1# `shiftL` 16 .|.
+                  W32# w2# `shiftL`  8 .|.
                   W32# w3#
 
 grabWord64 (Ptr ip#) =
@@ -209,13 +209,13 @@ grabWord64 (Ptr ip#) =
                 case indexWord8OffAddr# ip# 6# of
                  w6# ->
                   case indexWord8OffAddr# ip# 7# of
-                   w7# -> w w0# `unsafeShiftL` 56 .|.
-                          w w1# `unsafeShiftL` 48 .|.
-                          w w2# `unsafeShiftL` 40 .|.
-                          w w3# `unsafeShiftL` 32 .|.
-                          w w4# `unsafeShiftL` 24 .|.
-                          w w5# `unsafeShiftL` 16 .|.
-                          w w6# `unsafeShiftL`  8 .|.
+                   w7# -> w w0# `shiftL` 56 .|.
+                          w w1# `shiftL` 48 .|.
+                          w w2# `shiftL` 40 .|.
+                          w w3# `shiftL` 32 .|.
+                          w w4# `shiftL` 24 .|.
+                          w w5# `shiftL` 16 .|.
+                          w w6# `shiftL`  8 .|.
                           w w7#
   where
 #if defined(ARCH_64bit)
@@ -487,7 +487,7 @@ uintegerFromBytes bs =
     go !acc ws =
       case BS.uncons ws of
         Nothing       -> acc
-        Just (w, ws') -> go (acc `unsafeShiftL` 8 + fromIntegral w) ws'
+        Just (w, ws') -> go (acc `shiftL` 8 + fromIntegral w) ws'
 #endif
 
 --------------------------------------------------------------------------------
